@@ -75,6 +75,7 @@ go test -v ./cmd/api
 Prerequisites
 
 - Go (1.21 or higher)
+- Node.js (18+) for npm
 - PostgreSQL running locally or via Docker
 - Midtrans Sandbox Account (optional for live webhooks)
 
