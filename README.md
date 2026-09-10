@@ -1,11 +1,12 @@
 # 💳 High-Concurrency Fintech Wallet & Ledger Backend
 
-A robust, ACID-compliant e-wallet backend engine built with **Go** and **PostgreSQL**. Designed to handle concurrent transfer requests safely using double-entry ledger accounting, pessimistic database locking (`FOR UPDATE`), and strict idempotency key enforcement. Integrated with the **Midtrans API** for seamless payment top-ups.
+A robust, ACID-compliant fintech wallet system powered by a high-concurrency **Go** backend engine and a modern **Next.js** interactive dashboard. Designed to handle extreme concurrent transfer requests safely using double-entry ledger accounting, pessimistic database locking (`SELECT ... FOR UPDATE`), and strict idempotency key enforcement, paired with an integrated **Midtrans API** top-up flow.
 
 ---
 
 ## 🌟 Key Features
 
+### ⚡ Core Backend Engine (Primary Focus)
 * **Double-Entry Ledger System:** Every financial transaction writes balanced debit and credit entries to maintain strict auditability.
 * **Concurrency & Race Condition Prevention:** Employs PostgreSQL row-level locks (`SELECT ... FOR UPDATE`) to prevent double-spending under high concurrent load.
 * **Strict Idempotency:** Implements centralized idempotency storage to safely suppress duplicate API retries and gateway webhooks.
@@ -13,21 +14,41 @@ A robust, ACID-compliant e-wallet backend engine built with **Go** and **Postgre
 * **Zero-Framework Architecture:** Built exclusively with Go's standard library (`net/http`) to demonstrate core HTTP and middleware mastery.
 * **Strongly Typed Identifiers:** Fully standardized around `uuid.UUID` across handlers, domain logic, and database entities.
 
+### 🎨 Interactive Client Dashboard (Supporting)
+* **Next.js & TypeScript:** Modern single-page application providing real-time wallet interactions and state visualization.
+* **End-to-End Payment Flow:** Trigger top-ups via Midtrans Snap UI and execute live peer-to-peer wallet transfers.
 ---
 
 ## 🏗 System Architecture
 ```
-+-----------------------+         +-----------------------+
-|  Next.js Frontend UI  |  ---->  |    Go Backend API     |
-| React / TS / Tailwind |         |   (net/http Router)   |
-+-----------------------+         +-----------------------+
-                                              |
-                                              v
-                                  +-----------------------+
-                                  |  PostgreSQL Database  |
-                                  | (Ledger, Locks, Keys) |
-                                  +-----------------------+
++-------------------------------------------------------------------+
+  |                       Next.js Frontend Client                     |
+  |             (TypeScript / React / Tailwind CSS UI)                |
+  +-------------------------------------------------------------------+
+                                    |
+                                    v [JSON / HTTP]
+  +-------------------------------------------------------------------+
+  |                       Go Backend Service                          |
+  |           (net/http Router, Auth, Idempotency Layer)              |
+  +-------------------------------------------------------------------+
+                                    |
+         +--------------------------+--------------------------+
+         |                                                     |
+         v                                                     v
+  +-------------------------------+             +-------------------------------+
+  |      Transfer Engine          |             |    Midtrans Webhook Engine    |
+  | (Pessimistic Locking / ACID)  |             | (Signature Check / Settlement)|
+  +-------------------------------+             +-------------------------------+
+         |                                                     |
+         +--------------------------+--------------------------+
+                                    |
+                                    v
+  +-------------------------------------------------------------------+
+  |                      PostgreSQL Database                          |
+  | (Wallets | Ledger Entries | Transactions | Idempotency Keys)      |
+  +-------------------------------------------------------------------+
 ```
+
 ---
 
 ## 🧪 Concurrency & Safety Verification
