@@ -1,0 +1,23 @@
+# Security & Environment Variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Go / Backend
+backend/bin/
+backend/*.exe
+backend/*.out
+backend/coverage/
+
+# Next.js / Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# OS & IDE Artifacts
+.DS_Store
+.vscode/
+.idea/
+*.log
