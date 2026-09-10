@@ -94,6 +94,12 @@ cp .env.example .env
 go run ./cmd/api
 ```
 The API server will launch on http://localhost:8080.
+4. Frontend Setup
+```
+cd frontend
+npm install
+npm run dev
+```
 
 ## 🛠 Tech Stack
 
