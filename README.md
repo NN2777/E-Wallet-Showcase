@@ -100,6 +100,7 @@ cd frontend
 npm install
 npm run dev
 ```
+Frontend client starts on http://localhost:3000
 
 ## 🛠 Tech Stack
 
