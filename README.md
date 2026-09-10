@@ -16,7 +16,7 @@ A robust, ACID-compliant e-wallet backend engine built with **Go** and **Postgre
 ---
 
 ## 🏗 System Architecture
-
+```text
                +--------------------------------------------------+
                |                  Client App                      |
                +--------------------------------------------------+
@@ -42,7 +42,7 @@ A robust, ACID-compliant e-wallet backend engine built with **Go** and **Postgre
                |               PostgreSQL Database                |
                | (Wallets | Ledger Entries | Idempotency Keys)    |
                +--------------------------------------------------+
-
+```
 ---
 
 ## 🧪 Concurrency & Safety Verification
