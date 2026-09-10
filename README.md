@@ -16,32 +16,17 @@ A robust, ACID-compliant e-wallet backend engine built with **Go** and **Postgre
 ---
 
 ## 🏗 System Architecture
-```text
-               +--------------------------------------------------+
-               |                  Client App                      |
-               +--------------------------------------------------+
-                                        |
-                                        v
-               +--------------------------------------------------+
-               |             Go Standard HTTP Router              |
-               |       (Auth, Logging, Idempotency Layer)         |
-               +--------------------------------------------------+
-                                        |
-                   +--------------------+--------------------+
-                   |                                         |
-                   v                                         v
-   +-------------------------------+         +-------------------------------+
-   |      Transfer Engine          |         |    Midtrans Webhook Engine    |
-   | (Pessimistic Locking / ACID)  |         | (Signature Check / Settlement)|
-   +-------------------------------+         +-------------------------------+
-                   |                                         |
-                   +--------------------+--------------------+
-                                        |
-                                        v
-               +--------------------------------------------------+
-               |               PostgreSQL Database                |
-               | (Wallets | Ledger Entries | Idempotency Keys)    |
-               +--------------------------------------------------+
+```
++-----------------------+         +-----------------------+
+|  Next.js Frontend UI  |  ---->  |    Go Backend API     |
+| React / TS / Tailwind |         |   (net/http Router)   |
++-----------------------+         +-----------------------+
+                                              |
+                                              v
+                                  +-----------------------+
+                                  |  PostgreSQL Database  |
+                                  | (Ledger, Locks, Keys) |
+                                  +-----------------------+
 ```
 ---
 
@@ -50,10 +35,10 @@ A robust, ACID-compliant e-wallet backend engine built with **Go** and **Postgre
 The system includes a rigorous automated test suite testing severe race conditions, duplicate request suppression, and atomic refund flows.
 
 Race Condition & Stress Tests Covered:
-Scenario 1: 100 concurrent goroutines attempting to spend Rp80.000 simultaneously from a Rp100.000 balance (verifies exactly 1 succeeds and 99 fail safely).
-Scenario 2: Duplicate request execution under identical idempotency keys (verifies cached execution without double debiting).
-Scenario 3: Webhook settlement retries and edge cases.
-Scenario 4: Atomic transaction refunds verifying total balance integrity.
+- Scenario 1: 100 concurrent goroutines attempting to spend Rp80.000 simultaneously from a Rp100.000 balance (verifies exactly 1 succeeds and 99 fail safely).
+- Scenario 2: Duplicate request execution under identical idempotency keys (verifies cached execution without double debiting).
+- Scenario 3: Webhook settlement retries and edge cases.
+- Scenario 4: Atomic transaction refunds verifying total balance integrity.
 
 To execute the test suite:
 
@@ -91,7 +76,11 @@ The API server will launch on http://localhost:8080.
 
 ## 🛠 Tech Stack
 
-- Language: Go (Golang)
-- Database: PostgreSQL (pgx driver)
-- Authentication & IDs: Native uuid.UUID (google/uuid)
-- Payment Gateway: Midtrans Sandbox API
+### Core Engine (Primary Focus)
+* **Language:** Go (Golang) — `net/http` standard library
+* **Database:** PostgreSQL (`pgx` driver)
+* **Concurrency & Safety:** Pessimistic Row Locking (`FOR UPDATE`), Double-Entry Accounting
+* **Payment Gateway:** Midtrans Sandbox API (Payment Links & Webhooks)
+
+### Dashboard Client (Supporting)
+* **Framework:** Next.js (React), TypeScript, Tailwind CSS
